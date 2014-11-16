@@ -1,0 +1,24 @@
+#!/bin/bash
+NODE_VERSION="v0.10.33"
+if [ -f /usr/local/bin/node ] && [ "$(node --version)" == "$NODE_VERSION" ]
+then
+    node --version
+    echo "Node already installed, skipping..."
+else
+    local ORIG_DIR=$(pwd)
+    cd /tmp
+    wget http://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION.tar.gz
+    tar xfvz node-$NODE_VERSION.tar.gz
+    cd node-$NODE_VERSION
+    ./configure || exit $?
+    make || exit $?
+    make -j install || exit $?
+    cd /tmp
+    rm -Rf node-$NODE_VERSION*
+fi
+source /etc/profile.d/opt_path.sh
+cd ${ORIG_DIR}
+npm install nodemon -g
+npm install node-inspector -g
+npm install look -g
+npm install grunt-cli -g

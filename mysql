@@ -1,0 +1,26 @@
+#!/bin/bash
+MYSQL_VERSION="mysql  Ver 14.14 Distrib 5.1.73, for redhat-linux-gnu (x86_64) using readline 5.1"
+if [ -f /usr/bin/mysql ]
+then
+    mysql --version
+    echo "MySQL already installed, skipping..."
+else
+	MYSQL_PW="badpasswd"
+	#Install MySQL
+	yum install -y mysql-server mysql
+	#Set the MySQL service to start on boot
+	chkconfig --levels 235 mysqld on
+	#Start the MySQL service
+	/sbin/service mysqld start
+
+	# Set the root user password for all local domains
+	mysql -u root -e 'SET PASSWORD FOR "root"@"localhost" = PASSWORD("'$MYSQL_PW'");'
+	mysql -u root -p$MYSQL_PW -e 'SET PASSWORD FOR "root"@"localhost.localdomain" = PASSWORD("'$MYSQL_PW'");'
+	mysql -u root -p$MYSQL_PW -e 'SET PASSWORD FOR "root"@"127.0.0.1" = PASSWORD("'$MYSQL_PW'");'
+	mysql -u root -p$MYSQL_PW -e 'SET PASSWORD FOR "root"@"127.0.0.1" = PASSWORD("'$MYSQL_PW'");'
+
+	# Drop the Any user
+	mysql -u root -p$MYSQL_PW -e 'DROP USER ""@"localhost";'
+	mysql -u root -p$MYSQL_PW -e 'DROP USER ""@"localhost.localdomain";'
+
+fi

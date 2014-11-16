@@ -1,0 +1,17 @@
+#!/bin/bash
+if [ -f /usr/local/lib/libzmq.so ]
+then
+    echo "ZeroMQ already installed, skipping..."
+else
+    local ORIG_DIR=$(pwd)
+    cd /tmp
+    wget http://download.zeromq.org/zeromq-3.2.4.tar.gz
+    tar xfvz zeromq-3.2.4.tar.gz
+    cd zeromq-3.2.4
+    ./configure || exit $?
+    make || exit $?
+    make -j install || exit $?
+    cd /tmp
+    rm zeromq-3.2.4.tar.gz*
+    cd ${ORIG_DIR}
+fi
