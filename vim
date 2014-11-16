@@ -14,8 +14,8 @@ if [ ! -f /home/vagrant/.vimrc ]; then
     curl -LSso /home/vagrant/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
     cd /home/vagrant/.vim/bundle
     echo "Vim :: Command-P"
-    rm -rf command-t
-    git clone https://github.com/kien/ctrlp.vim.git bundle/ctrlp.vim
+    rm -rf ctrlp.vim 
+    git clone https://github.com/kien/ctrlp.vim.git ctrlp.vim
     echo "Vim :: NERDTree"
     rm -rf nerdtree
     git clone https://github.com/scrooloose/nerdtree.git
@@ -29,4 +29,3 @@ if [ ! -f /home/vagrant/.vimrc ]; then
 
     chown -R vagrant:vagrant /home/vagrant/.vim
 fi
-
