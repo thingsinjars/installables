@@ -1,0 +1,32 @@
+if [ -f /usr/bin/mongod ]; then
+	mongod --version
+	echo "MongoDB already installed, skipping..."
+else
+	#Need this to find the Mongo repo
+	if [ ! -f /etc/yum.repos.d/mongodb.repo ]; then
+		cat <<- EOF > /etc/yum.repos.d/mongodb.repo
+		[mongodb]
+		name=MongoDB Repository
+		baseurl=http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/
+		gpgcheck=0
+		enabled=1
+		EOF
+	fi
+
+	#Create Admin user and project user
+	cat <<- EOF > /etc/setupMongoUser.js
+	use admin
+	db.createUser({user: 'siteUserAdmin', pwd: 'badpasswd', roles: [ { role: 'userAdminAnyDatabase', db: 'admin' } ]});
+	use dummydb
+	db.createUser({user:'project_user', pwd:'badprojectpasswd', roles:['readWrite']});
+	EOF
+
+	#Install Mongo itself
+	yum install -y mongodb-org
+	#Set the MongoDB service to start on boot
+	chkconfig --levels 235 mongod on
+	#Start the MongoDB service
+	/sbin/service mongod start
+
+	mongo --port 27017 --authenticationDatabase admin < /etc/setupMongoUser.js
+fi
