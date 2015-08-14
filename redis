@@ -1,0 +1,15 @@
+REDIS_VERSION="Redis server v=2.8.17 sha=00000000:0 malloc=libc bits=64 build=e7a81979829aa2a"
+if [ -f /usr/bin/redis-server ] && [ "$(redis-server --version)" == "$REDIS_VERSION" ]
+then
+    redis-server --version
+    echo "Redis already installed, skipping..."
+else
+	wget http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+	rpm -ivh epel-release-6-8.noarch.rpm
+	yum install -y redis
+	#Set the service to start on boot
+	chkconfig --levels 235 redis on
+	#Start the Redis service
+	/sbin/service redis start
+
+fi

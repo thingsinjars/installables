@@ -24,7 +24,7 @@ if [ ! -f /home/vagrant/.vimrc ]; then
     git clone https://github.com/jistr/vim-nerdtree-tabs.git
 
     echo "Vim :: Molokai Theme"
-    rm -rf vim-nerdtree-tabs
+    rm -rf molokai
     git clone https://github.com/tomasr/molokai
 
     chown -R vagrant:vagrant /home/vagrant/.vim
