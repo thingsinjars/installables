@@ -1,0 +1,25 @@
+POSTGRESQL_VERSION="psql (PostgreSQL) 8.4.20"
+if [ -f /usr/bin/psql ]
+then
+    psql --version
+    echo "PostgreSQL already installed, skipping..."
+else
+	POSTGRESQL_USER="route"
+	POSTGRESQL_PW="badpasswd"
+	#Install PostgreSQL
+	yum install -y postgresql-server
+
+	#Set the PostgreSQL service to start on boot
+	chkconfig --levels 235 postgresql on
+
+	#Prepare the PostgreSQL service
+	/sbin/service postgresql initdb
+
+	#Start the PostgreSQL service
+	/sbin/service postgresql start
+
+	# Set the root user password for all local domains
+	sudo -u postgres psql -c "create user "$POSTGRESQL_USER" with password '"$POSTGRESQL_PW"';"
+	sudo -u postgres psql -c "alter user "$POSTGRESQL_USER" with superuser;"
+
+fi
