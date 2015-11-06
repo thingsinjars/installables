@@ -1,5 +1,5 @@
 #!/bin/bash
-NODE_VERSION="v0.10.33"
+NODE_VERSION="v0.12.7"
 if [ -f /usr/local/bin/node ] && [ "$(node --version)" == "$NODE_VERSION" ]
 then
     node --version
